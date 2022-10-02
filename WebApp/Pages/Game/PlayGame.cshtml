@@ -1,0 +1,174 @@
+﻿@page
+@using BattleShipBrain
+@model WebApp.Pages.Game.PlayGame
+
+<link rel="stylesheet" href="">
+
+<div class="row text-center">
+    <div class="col">
+        <h3>Player @Model.Brain.PlayerToMove to move</h3>
+    </div>
+</div>
+
+@{
+    var zValue = @Model.GameConfigFromDb.BoardSizeX > 25 ? 2 : 1;
+    var iValue = @Model.GameConfigFromDb.BoardSizeX > 25 ? 1 : 2;
+    char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+}
+
+@if (@Model.GameConfigFromDb.BoardSizeX < 25)
+{
+    <div class="row text-center">
+        <div class="col">
+            <h4>Enemy board</h4>
+        </div>
+        <div class="col">
+            <h4>Your board</h4>
+        </div>
+    </div>  
+}
+
+@for (var z = 0; z < zValue; z++)
+{
+    @if (@Model.GameConfigFromDb.BoardSizeX > 25)
+    {
+        var title = z == 0 ? "Enemy board" : "Your board";
+        <div class="row text-center">
+        <div class="col">
+            <h4>@title</h4>
+        </div>
+        </div>  
+    }
+        
+    <div class="row">
+        @{var ratio = 100 / (@Model.GameConfigFromDb.BoardSizeX + 1) ;}
+        @for (var i = 0; i < iValue; i++)
+        {
+            <div class="col">
+                <div class="game_board_container" style="margin: auto">
+                    
+                    <div class="game_board_row" style="margin: auto">
+                    @for (var a = 0; a < @Model.GameConfigFromDb.BoardSizeX + 1; a++)
+                    {
+                            <div class="game_board_cell" style="width: @ratio%; padding: @ratio% 0 0;">
+                                @if (a == 0)
+                                    {
+                                        <div class="aaa">#</div>
+                                    }
+                                    else
+                                    {
+                                        var t = alpha[(a - 1) % 26];
+                                        <div class="aaa">@t</div>
+                                    }
+                            </div>
+                    }
+                    </div>
+                    <br style="clear:both"/>
+
+
+                    @for (var y = 0; y < @Model.GameConfigFromDb.BoardSizeY; y++)
+                    {
+                        <div class="game_board_row ">
+                            <div class="game_board_cell" style="width: @ratio%; padding: @ratio% 0 0;">
+                                <div class="aaa">@y</div>
+                            </div>
+                            @for (var x = 0; x < @Model.GameConfigFromDb.BoardSizeX; x++)
+                            {
+                                var cellClass = @GetCellClass(@x, @y, i == 0);
+                                var sunkClass = @GetSunk(@x, @y, i == 0);
+
+                                if (i == 0)
+                                {
+                                    <form method="post">
+                                        <input asp-for="@Model.GameSaveId" value="@Model.GameSaveId" type="hidden">
+                                        <input asp-for="@Model.CoordinateString" value="@x-@y" type="hidden">
+                                        <input id="@x-@y" type="submit" class=" @cellClass @sunkClass game_board_cell" style="width: @ratio%; padding: @ratio% 0 0;">
+                                    </form>
+                                }
+                                else
+                                {
+                                    <input id="@x-@y" disabled type="submit" class=" @cellClass @sunkClass game_board_cell" style="width: @ratio%; padding: @ratio% 0 0; ">
+                                }
+                            }
+                        </div>
+                        <br style="clear:both"/>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+
+<style>
+    .game_board_cell {
+        border:1px solid #c3c3c3;
+        border-collapse: collapse;
+        background-color: #fbfbfb  ;
+        float: left;
+        height: 0;
+        position: relative;
+    }
+    
+    .aaa{
+       font-size: 3vh;
+       position:  absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+    }
+    
+    .selected {
+        background-color: #6ad4ff ;
+    }
+    
+    .placed {
+        background-color: #1b6ec2;
+    }
+    
+    .sunk {
+        background-color: #ffa8a8;
+    }
+    
+</style>
+
+@functions
+{
+
+    public string GetCellClass(int x, int y, bool hidden)
+    {
+        var state = hidden ? Model.OppositePlayerBoard[x, y] : Model.CurrentPlayerBoard[x, y];
+        
+        switch (state.ToString())
+        {
+            case "8":
+                return hidden ? "" : "placed";
+            case "X":
+                return "hit";
+            case "-":
+                return "miss";
+        }
+        return "";
+    }
+
+    public string GetSunk(int x, int y, bool hidden)
+    {
+        var state = hidden ? Model.OppositePlayerBoard[x, y] : Model.CurrentPlayerBoard[x, y];
+        return state.IsSunk ? "sunk" : "";
+    }
+}
+
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script>
+
+    $( ".game_board_cell" ).hover(
+        function() {
+            $( this ).addClass( "selected" );
+               
+        }, function() {
+            $( this ).removeClass( "selected" ); 
+        }
+    );
+</script>
+

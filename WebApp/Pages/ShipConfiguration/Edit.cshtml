@@ -1,0 +1,57 @@
+@page
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model WebApp.Pages_ShipConfiguration.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>GameShipConfig</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <input type="hidden" asp-for="GameConfigId" value="@Model.GameConfigId">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GameShipConfig.GameShipConfigId"/>
+            <div class="form-group">
+                <label asp-for="GameShipConfig.ShipName" class="control-label"></label>
+                <input asp-for="GameShipConfig.ShipName" class="form-control"/>
+                <span asp-validation-for="GameShipConfig.ShipName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameShipConfig.Quantity" class="control-label"></label>
+                <input asp-for="GameShipConfig.Quantity" class="form-control"/>
+                <span asp-validation-for="GameShipConfig.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameShipConfig.ShipSizeX" class="control-label"></label>
+                <input asp-for="GameShipConfig.ShipSizeX" class="form-control"/>
+                <span asp-validation-for="GameShipConfig.ShipSizeX" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameShipConfig.ShipSizeY" class="control-label"></label>
+                <input asp-for="GameShipConfig.ShipSizeY" class="form-control"/>
+                <span asp-validation-for="GameShipConfig.ShipSizeY" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameShipConfig.GameConfigId" class="control-label"></label>
+                <select asp-for="GameShipConfig.GameConfigId" class="form-control" asp-items="ViewBag.GameConfigId"></select>
+                <span asp-validation-for="GameShipConfig.GameConfigId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="../GameConfiguration/Edit" asp-route-id="@Model.GameConfigId">Back</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

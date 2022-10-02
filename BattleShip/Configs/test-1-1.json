@@ -1,0 +1,14 @@
+{
+  "BoardSizeX": 10,
+  "BoardSizeY": 10,
+  "EShipTouchRule": 1,
+  "Name": "test-1",
+  "ShipConfigs": [
+    {
+      "Name": "test",
+      "Quantity": 1,
+      "ShipSizeY": 1,
+      "ShipSizeX": 1
+    }
+  ]
+}

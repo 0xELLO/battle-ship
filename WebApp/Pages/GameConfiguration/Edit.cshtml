@@ -1,0 +1,82 @@
+@page
+@using BattleShipBrain
+@model WebApp.Pages_GameConfiguration.EditModel
+
+@{
+    ViewData["Title"] = "Edit configuration";
+}
+
+<h2>Game configuration:</h2>
+
+@if (Model.IsError)
+{
+    <div class="alert alert-danger" role="alert">
+        Inpossible configuration! Board size must be grater than 3. Board must be able to fit all ships.
+    </div>
+}
+
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GameConfig.GameConfigId" />
+            <div class="form-group">
+                <label asp-for="GameConfig.ConfigName" class="control-label"></label>
+                <input asp-for="GameConfig.ConfigName" class="form-control" />
+                <span asp-validation-for="GameConfig.ConfigName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameConfig.BoardSizeX" class="control-label"></label>
+                <input asp-for="GameConfig.BoardSizeX" class="form-control" />
+                <span asp-validation-for="GameConfig.BoardSizeX" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameConfig.BoardSizeY" class="control-label"></label>
+                <input asp-for="GameConfig.BoardSizeY" class="form-control" />
+                <span asp-validation-for="GameConfig.BoardSizeY" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameConfig.EShipTouchRule" class="control-label"></label>
+                <select asp-for="GameConfig.EShipTouchRule" asp-items="Html.GetEnumSelectList<EShipTouchRule>()" class="form-control"></select>
+                <span asp-validation-for="GameConfig.EShipTouchRule" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ships</th>
+                    <th><a class="badge badge-primary" asp-page="../ShipConfiguration/Create" asp-route-id="@Model.GameConfig.GameConfigId"> Add new ship </a></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.GameShipConfigs)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShipName) |
+                        @Html.DisplayFor(modelItem => item.ShipSizeX) x @Html.DisplayFor(modelItem => item.ShipSizeY) |
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        <a asp-page="../ShipConfiguration/Edit" asp-route-id="@item.GameShipConfigId">Edit</a> |
+                        <a asp-page="../ShipConfiguration/Delete" asp-route-id="@item.GameShipConfigId">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

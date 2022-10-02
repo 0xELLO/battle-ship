@@ -1,0 +1,58 @@
+﻿.act {
+    background: rgb(197, 229, 255);
+}
+
+.miss {
+    background-image: url(../images/dot.png);
+    background-size: 100% 100%;
+}
+
+.hit {
+    background-image: url("../images/cross2.png");
+    background-size: 100% 100%;
+}
+
+.sunk {
+    background-color: #ffa8a8;
+}
+
+.cell{
+    height: 50px;
+    width: 50px;
+}
+
+.gradient {
+    background-image: linear-gradient(to right, #407cfc, #8eb1fd);
+}
+
+.legend {
+    width: 30px;
+    height: 30px;
+}
+
+.legend::after {
+    content: ""
+}
+
+.table-board {
+    width: 100%;
+}
+
+.game_board_container {
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+}
+
+.game_board_row {
+    width: 100%;
+    float: left;
+}
+
+
+
+
+
+
+
+
+

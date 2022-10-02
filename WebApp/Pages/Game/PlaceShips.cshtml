@@ -1,0 +1,156 @@
+﻿@page
+@model WebApp.Pages.Game.PlaceShips
+
+@{
+    ViewData["Title"] = "Place Ships";
+    char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+}
+
+<div class="row">
+    <div class="col d-flex justify-content-center">
+        <h2>Player @Model.Player place your ships!</h2>
+    </div>
+</div>
+
+<div class="row">
+    @{var ratio = 100 / (@Model.GameConfiguration.BoardSizeX + 1) ;}
+    <div class="col">
+        <div class="game_board_container" style="margin: auto">
+                    
+            <div class="game_board_row" style="margin: auto">
+                @for (var a = 0; a < @Model.GameConfiguration.BoardSizeX + 1; a++)
+                {
+                    <div class="game_board_cell" style="width: @ratio%; padding: @ratio% 0 0;">
+                        @if (a == 0)
+                        {
+                            <div class="aaa">#</div>
+                        }
+                        else
+                        {
+                            var t = alpha[(a - 1) % 26];
+                            <div class="aaa">@t</div>
+                        }
+                    </div>
+                }
+            </div>
+            <br style="clear:both"/>
+
+
+            @for (var y = 0; y < @Model.GameConfiguration.BoardSizeY; y++)
+            {
+                <div class="game_board_row ">
+                    <div class="game_board_cell" style="width: @ratio%; padding: @ratio% 0 0;">
+                        <div class="aaa">@y</div>
+                    </div>
+                    @for (var x = 0; x < @Model.GameConfiguration.BoardSizeX; x++)
+                    {
+                        var cellClass = @GetCellClass(@x, @y);
+                        <input id="@x-@y" disabled type="submit" class=" @cellClass game_board_cell" style="width: @ratio%; padding: @ratio% 0 0;">
+                    }
+                </div>
+                <br style="clear:both"/>
+            }
+        </div>
+    </div>
+    
+
+    <div class="col-auto">
+        <h4>Ship List</h4>
+        <ul class="list-group">
+            @foreach (var gameShip in Model.GameShipsViews)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @gameShip.Name | @gameShip.X x @gameShip.Y
+                        
+                       
+                    <a asp-page="ChooseLocation" asp-route-boardId="@Model.SaveFromDb.GameSaveId" 
+                       asp-route-shipId="@gameShip.id" asp-route-player="@Model.Player">
+                        @(!gameShip.IsPlaced ? "Place ship" : "Change location")
+                    </a>
+                        
+            
+                </li>
+            }
+        </ul>
+    </div>
+    
+    <div class="w-100"></div>
+    <div class="col">
+        <form method="post">
+            <input asp-for="@Model.Player" value="@Model.Player" type="hidden">
+            <input asp-for="@Model.SaveId" value="@Model.SaveId" type="hidden">
+            <input class="btn btn-primary" type="submit" value="Finish"
+                   @if (Model.GameShipsViews.Exists(gsv => !gsv.IsPlaced))
+                   {
+                       @:disabled="disabled"
+                   }>
+        </form>
+    </div>
+</div>
+
+<style>
+    .game_board_cell {
+        border:1px solid #c3c3c3;
+        border-collapse: collapse;
+        background-color: #fbfbfb  ;
+        float: left;
+        height: 0;
+        position: relative;
+    }
+    
+    .aaa{
+       font-size: 3vh;
+       position:  absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+    }
+    
+    .selected {
+        background-color: #6ad4ff ;
+    }
+    
+    .placed {
+        background-color: #1b6ec2;
+    }
+    
+    .sunk {
+        background-color: #ffa8a8;
+    }
+    
+</style>
+
+@functions
+{
+
+    public string GetCellClass(int x, int y)
+    {
+        var state = Model.Brain.GameBoards[Model.Player].Board[x, y];
+        
+        switch (state.ToString())
+        {
+            case "8":
+                return "placed";
+            case "X":
+                return "hit";
+            case "-":
+                return "miss";
+        }
+        return "";
+    }
+}
+
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script>
+
+    $( ".game_board_cell" ).hover(
+        function() {
+            $( this ).addClass( "selected" );
+               
+        }, function() {
+            $( this ).removeClass( "selected" ); 
+        }
+    );
+</script>
+
+

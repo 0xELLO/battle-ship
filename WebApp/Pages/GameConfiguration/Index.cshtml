@@ -1,0 +1,131 @@
+@page
+@using BattleShipBrain
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@model WebApp.Pages_GameConfiguration.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="mr-auto p-2"><h3>Your game configurations</h3></div>
+            <div class="p-2">
+                <a class="btn btn-primary" asp-page="Create">Create New</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row justify-content-center">
+    <div class="col">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.GameConfig[0].ConfigName)
+                </th>
+                <th>
+                    Board size
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GameConfig[0].EShipTouchRule)
+                </th>
+                <th>
+                    Action
+                </th>
+                <th>
+                    Save
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.GameConfig)
+            {
+                var isInUse = Model.IsInUse(item.GameConfigId).Result;
+                
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConfigName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BoardSizeX) x  @Html.DisplayFor(modelItem => item.BoardSizeY)
+                    </td>
+                    <td>
+                        @getRuleName(item.EShipTouchRule)
+                    </td>
+                    <td>
+                        @if (isInUse)
+                        {
+                            <span class="badge badge-secondary" >Edit</span>
+                            <span class="badge badge-secondary">Delete</span>}
+                        else
+                        {
+                            <a class="badge badge-primary" asp-page="./Edit" asp-route-id="@item.GameConfigId">Edit</a> 
+                            <a class="badge badge-primary" asp-page="./Delete" asp-route-id="@item.GameConfigId">Delete</a>  
+                        }
+                        <a class="badge badge-primary" asp-page="./Details" asp-route-id="@item.GameConfigId">Details</a>
+                    </td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" asp-for="GameConfigId" value="@item.GameConfigId">
+                            <button type="submit" class="badge badge-primary" asp-page-handler="UploadToLocal" style="border: 0">Save to local storage</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3>Local configuraitons</h3>
+<div class="row">
+    <div class="col-auto">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.LocalGameConfig)
+                {
+                    <tr>
+                        <td>
+                            @item
+                        </td>
+                        <td>
+                            <form method="post">
+                                <input asp-for="@Model.ConfigName" type="hidden" value="@item">
+                                <input asp-page-handler="SaveToDb" type="submit" value="Upload" class="btn btn-primary btn-sm"/>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@functions
+{
+    public string getRuleName(int i)
+    {
+        switch (i)
+        {
+            case 1:
+                return "No touch rule";
+            case 2:
+                return "Corner touch rule";
+            case 3:
+                return "Side touch rule";
+        }
+        return "";
+    }
+}
+

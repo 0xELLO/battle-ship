@@ -1,0 +1,52 @@
+@page
+@model WebApp.Pages_GameConfiguration.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Game configuration details</h2>
+
+    <hr />
+    
+    <div class="row">
+        <div class="col">
+            <h3>Board:</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@Html.DisplayNameFor(model => model.GameConfig.ConfigName): @Model.GameConfig.ConfigName</li>
+                <li class="list-group-item">@Html.DisplayNameFor(model => model.GameConfig.BoardSizeX): @Model.GameConfig.BoardSizeX</li>
+                <li class="list-group-item">@Html.DisplayNameFor(model => model.GameConfig.BoardSizeY): @Model.GameConfig.BoardSizeY</li>
+                <li class="list-group-item"> @Html.DisplayNameFor(model => model.GameConfig.EShipTouchRule): @GetRuleName(Model.GameConfig.EShipTouchRule)</li>
+            </ul>
+        </div>
+        <div class="col">
+            <h3>Ships:</h3>
+            <ul class="list-group list-group-flush">
+                @foreach (var ship in Model.GameShipConfigs)
+                {
+                    <li class="list-group-item">@ship.ShipName | @ship.Quantity | @ship.ShipSizeX x @ship.ShipSizeY</li>
+                }
+            </ul>
+        </div>
+    </div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@functions
+{
+    public string GetRuleName(int i)
+    {
+        switch (i)
+        {
+            case 1:
+                return "No touch rule";
+            case 2:
+                return "Corner touch rule";
+            case 3:
+                return "Side touch rule";
+        }
+        return "";
+    }
+}

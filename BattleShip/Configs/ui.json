@@ -1,0 +1,14 @@
+{
+  "BoardSizeX": 10,
+  "BoardSizeY": 10,
+  "EShipTouchRule": 1,
+  "Name": "ui",
+  "ShipConfigs": [
+    {
+      "Name": "tetst",
+      "Quantity": 1,
+      "ShipSizeY": 2,
+      "ShipSizeX": 1
+    }
+  ]
+}

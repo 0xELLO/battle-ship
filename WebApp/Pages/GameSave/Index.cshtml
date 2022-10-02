@@ -1,0 +1,83 @@
+@page
+@model WebApp.Pages_GameSave.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Saves</h3>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GameSave[0].SaveName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameSave[0].GameCurrentPlayerNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameSave[0].GameMovesNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameSave[0].GameConfig)
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.GameSave) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaveName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameCurrentPlayerNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameMovesNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameConfig!.ConfigName)
+            </td>
+            <td>
+                <a asp-page="../Game/PlayGame" asp-route-id="@item.GameSaveId" class="badge badge-primary">Continue</a>
+                <a asp-page="./Delete" asp-route-id="@item.GameSaveId" class="badge badge-primary">Delete</a>
+                <a asp-page="./SaveLocal" asp-route-id="@item.GameSaveId" class="badge badge-primary">Save to local</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+<h3>Local saves</h3>
+<div class="row">
+    <div class="col-auto">
+            <table class="table ">
+                <thead>
+                    <th>Name</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                @foreach (var save in Model.LocalSaves)
+                {
+                    <tr>
+                        <td>
+                            @save
+                        </td>
+                        <td>
+                            <form method="post">
+                                <input asp-for="@Model.SaveName" type="hidden" value="@save">
+                                <input type="submit" value="Upload and continue" class="btn btn-primary btn-sm" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+    </div>
+</div>
+

@@ -1,0 +1,58 @@
+﻿@page
+@using WebApp.Pages.Game
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<form method="post">
+<div class="text-center">
+    <h3 class="display-4">Welcome to Battle ship game!</h3>
+    
+    <div class="row mt-5">
+        <div class="col">
+            <h2>Start new game!</h2>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col">
+            <h4><span class="badge badge-primary">First step</span>
+                Choose game configuration. <a asp-page="./GameConfiguration/Create">Create new</a></h4>
+        </div>
+    </div>
+
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-5">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GameConfigId" class="control-label">Your configurations</label>
+                <select asp-for="GameConfigId" class="form-control" asp-items="ViewBag.GameConfigId"></select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-3">
+        <div class="col">
+            <h4><span class="badge badge-primary">Second step</span> Choose ship placement type</h4>
+        </div>
+    </div>
+    
+    <div class="row justify-content-md-center">
+        <div class="col-md-8">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input asp-for="ShipPlacementType" type="radio" value="@ShipPlacementType.Manual"> Manual ship placement
+                </label>
+                <label class="btn btn-secondary">
+                    <input asp-for="ShipPlacementType" type="radio" value="@ShipPlacementType.Random"> Random ship placement
+                </label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-3">
+        <div class="col">
+            <input type="submit" value="Start the game!" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
+</form>
