@@ -1,5 +1,8 @@
 # BattleShip
 C# course work - result 50/50
+A Console application and Web application which share the same "brain logic"
+
+ASP.NET Core MVC, Entity Framework Core
 
 ## Given work description 
 ~~~
